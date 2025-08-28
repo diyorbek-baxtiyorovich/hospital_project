@@ -4,6 +4,8 @@ import {registerPlugins} from '@core/utils/plugins'
 
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
+import 'viewerjs/dist/viewer.css'
+import VueViewer from 'v-viewer'
 
 
 // Styles
@@ -22,6 +24,7 @@ const app = createApp(App)
 
 app.use(Toast, options)
 app.use(VMask)
+app.use(VueViewer)
 
 
 // Register plugins

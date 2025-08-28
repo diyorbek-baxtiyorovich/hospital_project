@@ -27,13 +27,19 @@ export const useLoanPortfolioStore = defineStore('loanPortfolio', {
       {
         title: 'Agent F.I.SH',
         align: 'start',
-        key: 'loan_agent_fullname',
+        key: 'loan_agents',
       },
       {
         title: 'Lokal kod',
         align: 'start',
         key: 'local_code',
-      }],
+      },
+      {
+        title: '...',
+        align: 'center',
+        key: 'actions',
+      },
+    ],
 
     pageParams: {
       page: 1,

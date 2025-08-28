@@ -3,7 +3,7 @@ import {ref} from 'vue'
 
 import {useToast} from 'vue-toastification'
 import {updateUser} from "@/service/userService.js"
-import {getLocalCode, getLocalCodeByRegionId} from "@/service/localCodeService.js";
+import {getLocalCodeByRegionId} from "@/service/localCodeService.js";
 
 const props = defineProps({
   updatingItem: Object,
@@ -96,7 +96,6 @@ watch(
                 :rules="[
                   v => !!v || 'to\'ldirish majburiy!',
                   v => (v && v.length >= 3) || 'kamida 3 harfdan iborat bo\'lishi zarur',
-
                 ]"
                 label="Xodim F.I.SH"
                 required

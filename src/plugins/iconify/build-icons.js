@@ -61,7 +61,9 @@ const sources = {
         'file-excel',
         'lock-reset',
         'cash',
-        'nas'
+        'nas',
+        'account-multiple',
+        'arrow-left-bottom'
       ],
     },
     {

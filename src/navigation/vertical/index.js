@@ -12,6 +12,11 @@ export const navItems = [
     icon: {icon: 'tabler-building-bank'},
   },
   {
+    title: 'Mijozlar ro\'yxati',
+    to: {name: 'clients'},
+    icon: {icon: 'mdi-account-multiple'},
+  },
+  {
     title: 'Struktura',
     to: {name: 'region'},
     icon: {icon: 'mdi-cog'},

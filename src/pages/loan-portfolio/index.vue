@@ -44,6 +44,8 @@ async function uploadFile() {
   }
 }
 
+const selectedItem = ref(null)
+
 let debounceTimeout = null
 
 watch(
@@ -65,6 +67,7 @@ onMounted(() => {
 
 <template>
   <VCard>
+
     <VRow class="ma-2">
       <VCol
         cols="12"
@@ -111,7 +114,6 @@ onMounted(() => {
           <VIcon class="mr-1" icon="mdi-file-excel" size="25"/>
           yuklash
         </VBtn>
-        <AppendPortfolio/>
       </VCol>
     </VRow>
     <VCardText>
@@ -127,6 +129,16 @@ onMounted(() => {
       >
         <template v-slot:item.overdue_balance="{ item }">
           {{ toSum(item.overdue_balance) }}
+        </template>
+
+        <template v-slot:item.loan_agents="{ item }">
+          <div v-for="item in item.loan_agents" :key="item.loan_agent_id">
+            {{ item.full_name }}
+          </div>
+        </template>
+
+        <template v-slot:item.actions="{ item }">
+          <AppendPortfolio :updating-item="item"/>
         </template>
       </VDataTableVirtual>
 

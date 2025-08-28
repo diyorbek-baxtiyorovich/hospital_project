@@ -21,7 +21,7 @@ export async function getLoanPortfolioData(pageParams) {
 
 export async function getAgentsList() {
   try {
-    const {data} = await axios.get('v1/users/get-agents')
+    const {data} = await axios.get('v1/loan-agent/get-agents')
 
     return data
   } catch (error) {
@@ -41,6 +41,16 @@ export async function uploadLoanPortfolio(formData) {
   } catch (error) {
     console.error(error)
     throw error
+  }
+}
+
+export async function appendLoanToAgent(item) {
+  try {
+    const {data} = await axios.put('v1/loan-portfolio/relate', item)
+
+    return data
+  } catch (error) {
+    return error
   }
 }
 
