@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import {watch, onMounted, ref} from "vue";
 import {useToast} from "vue-toastification";
 import {useClientStore} from '@/stores/clientStore'

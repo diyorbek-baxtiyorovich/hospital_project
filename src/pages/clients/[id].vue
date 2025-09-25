@@ -13,7 +13,7 @@ import AgentCallLogs from "@/pages/clients/coponents/AgentCallLogs.vue";
 
 <template>
   <section>
-    <VBtn class="mb-4" variant="text" @click="router.push('/clients')">
+    <VBtn class="mb-4" variant="text" @click="router.back()">
       <VIcon color="primary" icon="mdi-arrow-left-bottom" size="20"/>
       Ro'yxatga qaytish
     </VBtn>

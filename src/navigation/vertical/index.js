@@ -3,29 +3,35 @@ import checkPermission from "@/utils/checkPermission.js"
 export const navItems = [
   {
     title: 'Asosiy',
-    to: {name: 'root'},
-    icon: {icon: 'tabler-smart-home'},
+    to: { name: 'root' },
+    icon: { icon: 'tabler-smart-home' },
   },
   {
     title: 'Kredit portfeli',
-    to: {name: 'loan-portfolio'},
-    icon: {icon: 'tabler-building-bank'},
+    to: { name: 'loan-portfolio' },
+    icon: { icon: 'tabler-building-bank' },
   },
   {
     title: 'Mijozlar ro\'yxati',
-    to: {name: 'clients'},
-    icon: {icon: 'mdi-account-multiple'},
+    to: { name: 'clients' },
+    icon: { icon: 'mdi-account-multiple' },
+  },
+  {
+    title: 'Agentlar daromadlari',
+    to: { name: 'agents' },
+    icon: { icon: 'mdi-account-multiple' },
   },
   {
     title: 'Struktura',
-    to: {name: 'region'},
-    icon: {icon: 'mdi-cog'},
+    to: { name: 'region' },
+    icon: { icon: 'mdi-cog' },
     children: [
       {
         title: 'Viloyat',
-        to: {name: 'region'},
-        icon: {icon: 'mdi-folder-wrench-outline'},
+        to: { name: 'region' },
+        icon: { icon: 'mdi-folder-wrench-outline' },
       },
+
       // {
       //   title: 'Tuman',
       //   to: {name: 'district'},
@@ -33,33 +39,33 @@ export const navItems = [
       // },
       {
         title: 'Lokal kod',
-        to: {name: 'local-code'},
-        icon: {icon: 'mdi-map'},
+        to: { name: 'local-code' },
+        icon: { icon: 'mdi-map' },
       },
       {
         title: 'Departament',
-        to: {name: 'department'},
-        icon: {icon: 'mdi-map'}
+        to: { name: 'department' },
+        icon: { icon: 'mdi-map' },
       },
       {
         title: 'Xodimla ro\'yxati',
-        to: {name: 'user'},
-        icon: {icon: 'mdi-map'},
+        to: { name: 'user' },
+        icon: { icon: 'mdi-map' },
       },
     ],
   },
   {
     title: 'RBAC',
-    to: {name: 'rbac'},
+    to: { name: 'rbac' },
   },
 ]
 
-export const filterNavItems = (navItems) => {
+export const filterNavItems = navItems => {
   // Get username from localStorage
   const userData = JSON.parse(localStorage.getItem('user_data'))
   const username = userData?.data?.username
 
-  return navItems.filter((item) => {
+  return navItems.filter(item => {
     const permissionKey = item.permission || null
 
     // Special case: only show "RBAC" if user is superuser
@@ -71,6 +77,7 @@ export const filterNavItems = (navItems) => {
     // Handle children
     if ('children' in item && Array.isArray(item.children)) {
       item.children = filterNavItems(item.children)
+
       return item.children.length > 0 || (permissionKey ? checkPermission(permissionKey) : true)
     }
 

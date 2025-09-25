@@ -6,8 +6,6 @@ import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
-
-
 // Styles
 import '@core/scss/template/index.scss'
 import '@styles/styles.scss'
