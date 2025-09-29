@@ -1,0 +1,24 @@
+variables:
+  DEV_APP_PATH: "/usr/share/nginx/html/"
+  DEV_USER: "root"
+  DEV_HOST: "172.23.1.14"
+  DEV_PROJECT_NAME: "front-admin"
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$GITLAB_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  tags:
+    - alpine
+    - shell
+
+  script:
+    
+    - ssh $DEV_USER@$DEV_HOST rm -r  $DEV_APP_PATH/$DEV_PROJECT_NAME 
+    - ssh $DEV_USER@$DEV_HOST git clone ssh://git@gitlab.mkb.uz:2222/hard-collection/front-admin.git 
+    - ssh $DEV_USER@$DEV_HOST mv $DEV_PROJECT_NAME $DEV_APP_PATH/
