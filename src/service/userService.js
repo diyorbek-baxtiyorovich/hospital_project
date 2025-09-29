@@ -11,6 +11,16 @@ export async function getUsers() {
   }
 }
 
+export async function getUsersMe() {
+    try {
+    const {data} = await axios.get('/v1/app/users/get-me')
+
+        return data
+    } catch (error) {
+        return error
+    }
+}
+
 
 export async function getUserRole(id) {
   try {

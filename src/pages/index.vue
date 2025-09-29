@@ -1,7 +1,17 @@
 <script setup>
+// eslint-disable-next-line import/extensions
+import {getUsersMe} from "@/service/userService.js";
+
 const user = computed(() => {
   const userData = localStorage.getItem('user_data')
   return userData ? JSON.parse(userData) : null
+})
+
+async function getUsersList() {
+  const res = await getUsersMe()
+}
+onMounted(async () => {
+  await getUsersList()
 })
 </script>
 

@@ -1,1 +1,0 @@
-import{_ as o}from"./CollateralInfo.vue_vue_type_script_setup_true_lang-DfmSrEN8.js";import"./clientService-lp1ZWtEt.js";import"./axios-B6xj8bPG.js";import"./index-DvA8P6Gk.js";import"./VCard-DAsvdsxx.js";import"./VAvatar-B_KDJW1g.js";import"./VImg-C2yDnbiZ.js";import"./VDivider-zS_1rsPv.js";import"./VRow-CXlrfULG.js";import"./VExpansionPanels-CTmStTwA.js";export{o as default};
