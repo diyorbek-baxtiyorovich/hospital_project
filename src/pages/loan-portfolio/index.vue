@@ -35,17 +35,18 @@ async function uploadFile() {
 
   loadingUpload.value = true
   try {
-    const formData = new FormData()
-    formData.append("file", file.value)
-
     let formattedDate = ""
     if (selectedDate.value instanceof Date) {
       formattedDate = selectedDate.value.toISOString().slice(0, 10)
     } else {
-      formattedDate = selectedDate.value
+      formattedDate = String(selectedDate.value)
     }
 
+    const formData = new FormData()
+    formData.append("file", file.value)
+
     const result = await uploadLoanPortfolio(formData, formattedDate)
+
     toast.success("Fayl muvaffaqiyatli yuklandi")
     uploadPortfolioDialog.value = false
     await getLoanPortfolio()
@@ -53,11 +54,8 @@ async function uploadFile() {
     toast.error("Faylni yuklashda xatolik yuz berdi")
   } finally {
     loadingUpload.value = false
-    selectedDate.value = null
-    file.value = null
   }
 }
-
 
 const selectedItem = ref(null)
 
@@ -213,18 +211,13 @@ onMounted(() => {
               </ul>
             </span>
           </div>
-
           <div class="w-full d-flex justify-end mt-4">
-            <VBtn
-              :disabled="!file || !selectedDate"
-              :loading="loadingUpload"
-              @click="uploadFile"
-            >
+            <VBtn :disabled="!file" :loading="loadingUpload" @click="uploadFile">
               Yuklash
             </VBtn>
           </div>
-        </VCardText>
 
+        </VCardText>
       </VCard>
     </VDialog>
   </VCard>
