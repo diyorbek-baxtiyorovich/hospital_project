@@ -7,7 +7,7 @@ import AppendPortfolio from "@/pages/loan-portfolio/components/AppendPortfolio.v
 
 const toast = useToast()
 const loanPortfolioStore = useLoanPortfolioStore()
-
+const selectedDate = ref(null)
 const uploadPortfolioDialog = ref(false)
 const file = ref(null)
 
@@ -28,12 +28,24 @@ function perPageChanged() {
 const loadingUpload = ref(false)
 
 async function uploadFile() {
+  if (!file.value || !selectedDate.value) {
+    toast.error("Sana va faylni kiritish shart!")
+    return
+  }
+
   loadingUpload.value = true
   try {
     const formData = new FormData()
-    formData.append('file', file.value)
+    formData.append("file", file.value)
 
-    const result = await uploadLoanPortfolio(formData)
+    let formattedDate = ""
+    if (selectedDate.value instanceof Date) {
+      formattedDate = selectedDate.value.toISOString().slice(0, 10)
+    } else {
+      formattedDate = selectedDate.value
+    }
+
+    const result = await uploadLoanPortfolio(formData, formattedDate)
     toast.success("Fayl muvaffaqiyatli yuklandi")
     uploadPortfolioDialog.value = false
     await getLoanPortfolio()
@@ -41,8 +53,11 @@ async function uploadFile() {
     toast.error("Faylni yuklashda xatolik yuz berdi")
   } finally {
     loadingUpload.value = false
+    selectedDate.value = null
+    file.value = null
   }
 }
+
 
 const selectedItem = ref(null)
 
@@ -182,6 +197,13 @@ onMounted(() => {
             label="Excel faylni tanlang"
             variant="outlined"
           />
+          <VDateInput
+            v-model="selectedDate"
+            label="Sanani kiriting"
+            variant="outlined"
+            prepend-icon="mdi-calendar"
+            class="mt-4"
+          />
           <div class="mt-2">
             <span class="text-caption text-secondary">
               Excel faylni yuklash uchun shartlar:
@@ -191,13 +213,18 @@ onMounted(() => {
               </ul>
             </span>
           </div>
+
           <div class="w-full d-flex justify-end mt-4">
-            <VBtn :disabled="!file" :loading="loadingUpload" @click="uploadFile">
+            <VBtn
+              :disabled="!file || !selectedDate"
+              :loading="loadingUpload"
+              @click="uploadFile"
+            >
               Yuklash
             </VBtn>
           </div>
-
         </VCardText>
+
       </VCard>
     </VDialog>
   </VCard>

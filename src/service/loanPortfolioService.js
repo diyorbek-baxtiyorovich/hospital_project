@@ -2,7 +2,7 @@ import axios from '@/lib/axios.js'
 
 export async function getLoanPortfolioData(pageParams) {
   try {
-    const {data} = await axios.get('v1/loan-portfolio/get-all', {
+    const { data } = await axios.get('v1/loan-portfolio/get-all', {
       params: {
         page: pageParams.page,
         size: pageParams.size,
@@ -21,7 +21,7 @@ export async function getLoanPortfolioData(pageParams) {
 
 export async function getAgentsList() {
   try {
-    const {data} = await axios.get('v1/loan-agent/get-agents')
+    const { data } = await axios.get('v1/loan-agent/get-agents')
 
     return data
   } catch (error) {
@@ -29,13 +29,17 @@ export async function getAgentsList() {
   }
 }
 
-export async function uploadLoanPortfolio(formData) {
+export async function uploadLoanPortfolio(formData, date) {
   try {
-    const {data} = await axios.post('v1/loan-portfolio/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const { data } = await axios.post(
+      `v1/loan-portfolio/upload?date_=${date}`, // query param sifatida yuborilyapti
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    })
+    )
 
     return data
   } catch (error) {
@@ -44,9 +48,10 @@ export async function uploadLoanPortfolio(formData) {
   }
 }
 
+
 export async function appendLoanToAgent(item) {
   try {
-    const {data} = await axios.put('v1/loan-portfolio/relate', item)
+    const { data } = await axios.put('v1/loan-portfolio/relate', item)
 
     return data
   } catch (error) {
