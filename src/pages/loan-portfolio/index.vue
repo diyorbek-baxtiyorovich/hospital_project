@@ -1,15 +1,38 @@
-<script lang="ts" setup>
-import {watch, onMounted, ref} from "vue";
-import {useToast} from "vue-toastification";
-import {useLoanPortfolioStore} from '@/stores/loanPortfolioStore'
-import {uploadLoanPortfolio} from '@/service/loanPortfolioService'
-import AppendPortfolio from "@/pages/loan-portfolio/components/AppendPortfolio.vue";
+<script  setup>
+import { watch, onMounted, ref, computed } from "vue"
+import { useToast } from "vue-toastification"
+import { useLoanPortfolioStore } from '@/stores/loanPortfolioStore'
+import { uploadLoanPortfolio } from '@/service/loanPortfolioService'
+import AppendPortfolio from "@/pages/loan-portfolio/components/AppendPortfolio.vue"
 
 const toast = useToast()
 const loanPortfolioStore = useLoanPortfolioStore()
 const selectedDate = ref(null)
 const uploadPortfolioDialog = ref(false)
 const file = ref(null)
+const resultList = ref({})
+const dialog = ref(false)
+const invalidLoans = ref(null)
+const showAllInvalidLoans = ref(false)
+
+
+const headers = [
+  { title: "ID", key: "id" },
+  { title: "Loan ID", key: "loan_id" },
+  { title: "Mijoz", key: "client_name" },
+  { title: "Qoldiq", key: "overdue_balance" },
+  { title: "Local Code", key: "local_code" },
+  { title: "Agentlar", key: "loan_agents" },
+]
+
+
+const displayedInvalidLoans = computed(() => {
+  if (!invalidLoans.value || !invalidLoans.value.data) return []
+  return showAllInvalidLoans.value
+    ? invalidLoans.value.data
+    : invalidLoans.value.data.slice(0, 10)
+})
+
 
 async function getLoanPortfolio() {
   await loanPortfolioStore.fetchLoanPortfolio()
@@ -17,6 +40,7 @@ async function getLoanPortfolio() {
 
 function toSum(amount) {
   if (!amount) return "0"
+
   return Number(amount).toLocaleString("uz-UZ")
 }
 
@@ -30,6 +54,7 @@ const loadingUpload = ref(false)
 async function uploadFile() {
   if (!file.value || !selectedDate.value) {
     toast.error("Sana va faylni kiritish shart!")
+
     return
   }
 
@@ -43,10 +68,19 @@ async function uploadFile() {
     }
 
     const formData = new FormData()
+
     formData.append("file", file.value)
 
     const result = await uploadLoanPortfolio(formData, formattedDate)
+    if(result.result === 'Ok') {
+      resultList.value = result.data
+      invalidLoans.value = result.data.invalid_loans || null
+      dialog.value = true
+    } else {
+      toast.error(result.message || "Faylni yuklashda xatolik yuz berdi")
 
+      return
+    }
     toast.success("Fayl muvaffaqiyatli yuklandi")
     uploadPortfolioDialog.value = false
     await getLoanPortfolio()
@@ -56,7 +90,6 @@ async function uploadFile() {
     loadingUpload.value = false
   }
 }
-
 const selectedItem = ref(null)
 
 let debounceTimeout = null
@@ -80,7 +113,6 @@ onMounted(() => {
 
 <template>
   <VCard>
-
     <VRow class="ma-2">
       <VCol
         cols="12"
@@ -102,7 +134,7 @@ onMounted(() => {
           item-title="full_name"
           item-value="loan_agent_id"
           label="Agent"
-          @update:modelValue="getLoanPortfolio"
+          @update:model-value="getLoanPortfolio"
         />
       </VCol>
       <VCol
@@ -120,11 +152,17 @@ onMounted(() => {
         />
       </VCol>
 
-      <VCol class="d-flex justify-end" cols="12" md="3">
-        <VBtn
-          @click="uploadPortfolioDialog = true"
-        >
-          <VIcon class="mr-1" icon="mdi-file-excel" size="25"/>
+      <VCol
+        class="d-flex justify-end"
+        cols="12"
+        md="3"
+      >
+        <VBtn @click="uploadPortfolioDialog = true">
+          <VIcon
+            class="mr-1"
+            icon="mdi-file-excel"
+            size="25"
+          />
           yuklash
         </VBtn>
       </VCol>
@@ -140,18 +178,21 @@ onMounted(() => {
         loading-text="ma'lumotlar yuklanmoqda"
         no-data-text="ma'lumot topilmadi"
       >
-        <template v-slot:item.overdue_balance="{ item }">
+        <template #item.overdue_balance="{ item }">
           {{ toSum(item.overdue_balance) }}
         </template>
 
-        <template v-slot:item.loan_agents="{ item }">
-          <div v-for="item in item.loan_agents" :key="item.loan_agent_id">
+        <template #item.loan_agents="{ item }">
+          <div
+            v-for="item in item.loan_agents"
+            :key="item.loan_agent_id"
+          >
             {{ item.full_name }}
           </div>
         </template>
 
-        <template v-slot:item.actions="{ item }">
-          <AppendPortfolio :updating-item="item"/>
+        <template #item.actions="{ item }">
+          <AppendPortfolio :updating-item="item" />
         </template>
       </VDataTableVirtual>
 
@@ -173,7 +214,10 @@ onMounted(() => {
       </VCardActions>
     </VCardText>
 
-    <VDialog v-model="uploadPortfolioDialog" max-width="600px">
+    <VDialog
+      v-model="uploadPortfolioDialog"
+      max-width="600px"
+    >
       <VCard>
         <div class="ma-2 d-flex justify-space-between">
           <VCardTitle class="text-h5">
@@ -212,12 +256,109 @@ onMounted(() => {
             </span>
           </div>
           <div class="w-full d-flex justify-end mt-4">
-            <VBtn :disabled="!file" :loading="loadingUpload" @click="uploadFile">
+            <VBtn
+              :disabled="!file"
+              :loading="loadingUpload"
+              @click="uploadFile"
+            >
               Yuklash
             </VBtn>
           </div>
-
         </VCardText>
+      </VCard>
+    </VDialog>
+
+    <VDialog
+      v-model="dialog"
+      max-width="1200px"
+      persistent
+    >
+      <VCard>
+        <VCardTitle class="d-flex align-center justify-space-between">
+          <span class="text-h6 font-weight-medium">Kredit Mijozlari Ro'yxati</span>
+          <VBtn
+            icon="mdi-close"
+            variant="text"
+            @click="dialog = false"
+          />
+        </VCardTitle>
+
+        <VDivider />
+
+        <VCardText v-if="invalidLoans && invalidLoans.data && invalidLoans.data.length">
+          <VAlert type="warning" border="start" variant="tonal" class="mb-4">
+            {{ invalidLoans.message }}
+          </VAlert>
+
+          <VChip
+            v-for="loan in displayedInvalidLoans"
+            :key="loan"
+            color="error"
+            size="small"
+            class="ma-1"
+          >
+            {{ loan }}
+          </VChip>
+
+          <div v-if="invalidLoans.data.length > 10" class="mt-2">
+            <VBtn
+              size="small"
+              variant="text"
+              @click="showAllInvalidLoans = !showAllInvalidLoans"
+            >
+              {{ showAllInvalidLoans ? "Yopish" : "Hammasini ko‘rish" }}
+            </VBtn>
+          </div>
+        </VCardText>
+
+
+
+        <VDivider v-if="invalidLoans && invalidLoans.data && invalidLoans.data.length" />
+        <VCardText>
+          <VAlert type="warning" border="start" variant="tonal" class="mb-4">
+            {{ resultList.message }}
+          </VAlert>
+          <VDataTable
+            :headers="headers"
+            :items="resultList.data"
+            class="elevation-1 rounded-xl"
+            density="compact"
+            fixed-header
+            height="400"
+          >
+            <template #item.loan_agents="{ item }">
+              <VChip
+                v-if="item.loan_agents.length === 0"
+                color="error"
+                size="small"
+                variant="tonal"
+              >
+                Taqsimlanmagan
+              </VChip>
+              <VChip
+                v-else
+                color="success"
+                size="small"
+                variant="tonal"
+              >
+                {{ item.loan_agents.join(", ") }}
+              </VChip>
+            </template>
+          </VDataTable>
+        </VCardText>
+
+        <VDivider />
+
+        <VCardActions>
+          <VSpacer />
+          <VBtn
+            color="primary"
+            variant="tonal"
+            @click="dialog = false"
+          >
+            Yopish
+          </VBtn>
+        </VCardActions>
       </VCard>
     </VDialog>
   </VCard>
