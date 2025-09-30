@@ -347,7 +347,6 @@ onMounted(() => {
           </VDataTable>
         </VCardText>
 
-        <VDivider />
 
         <VCardActions>
           <VSpacer />
