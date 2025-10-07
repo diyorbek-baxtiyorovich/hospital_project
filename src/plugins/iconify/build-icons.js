@@ -63,7 +63,12 @@ const sources = {
         'cash',
         'nas',
         'account-multiple',
-        'arrow-left-bottom'
+        'arrow-left-bottom',
+          'check-bold',
+          'account-group',
+          'chart-bar',
+          'check-circle',
+          'calendar'
       ],
     },
     {
@@ -78,7 +83,7 @@ const sources = {
     //   icons: [
     //     'home-twotone-alt',
     //     'github',
-    //     'document-list',
+    //     'document-list',4
     //     'document-code',
     //     'image-twotone',
     //   ],

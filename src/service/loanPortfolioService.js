@@ -18,7 +18,6 @@ export async function getLoanPortfolioData(pageParams) {
   }
 }
 
-
 export async function getAgentsList() {
   try {
     const { data } = await axios.get('v1/loan-agent/get-agents')
@@ -32,7 +31,7 @@ export async function getAgentsList() {
 export async function uploadLoanPortfolio(formData, date) {
   try {
     const { data } = await axios.post(
-      `v1/loan-portfolio/upload?date_=${date}`, // query param sifatida yuborilyapti
+      `v1/loan-portfolio/upload?date_=${date}`,
       formData,
       {
         headers: {

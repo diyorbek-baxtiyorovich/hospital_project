@@ -54,42 +54,48 @@ const loadingUpload = ref(false)
 async function uploadFile() {
   if (!file.value || !selectedDate.value) {
     toast.error("Sana va faylni kiritish shart!")
-
     return
   }
 
   loadingUpload.value = true
   try {
     let formattedDate = ""
+
     if (selectedDate.value instanceof Date) {
-      formattedDate = selectedDate.value.toISOString().slice(0, 10)
+      const year = selectedDate.value.getFullYear()
+      const month = String(selectedDate.value.getMonth() + 1).padStart(2, '0')
+      const day = String(selectedDate.value.getDate()).padStart(2, '0')
+
+      formattedDate = `${year}-${month}-${day}`
     } else {
       formattedDate = String(selectedDate.value)
     }
 
     const formData = new FormData()
-
     formData.append("file", file.value)
 
     const result = await uploadLoanPortfolio(formData, formattedDate)
-    if(result.result === 'Ok') {
+
+    if (result.result === 'Ok') {
       resultList.value = result.data
       invalidLoans.value = result.data.invalid_loans || null
       dialog.value = true
+      toast.success("Fayl muvaffaqiyatli yuklandi")
+      uploadPortfolioDialog.value = false
+      await getLoanPortfolio()
     } else {
       toast.error(result.message || "Faylni yuklashda xatolik yuz berdi")
-
-      return
     }
-    toast.success("Fayl muvaffaqiyatli yuklandi")
-    uploadPortfolioDialog.value = false
-    await getLoanPortfolio()
+
   } catch (error) {
     toast.error("Faylni yuklashda xatolik yuz berdi")
   } finally {
     loadingUpload.value = false
+    file.value = null
+    selectedDate.value = null
   }
 }
+
 const selectedItem = ref(null)
 
 let debounceTimeout = null
