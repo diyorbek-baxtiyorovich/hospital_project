@@ -15,7 +15,7 @@ const filters = ref({
   region_id: null,
   local_code_id: null,
   for_month: currentMonth,
-  status: true,
+  status: null,
 })
 
 const regionsList = ref([])
@@ -35,7 +35,7 @@ function resetFilters() {
     region_id: null,
     local_code_id: null,
     for_month: currentMonth,
-    status: true,
+    status: null,
   }
 }
 
