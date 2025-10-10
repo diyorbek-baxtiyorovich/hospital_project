@@ -312,7 +312,7 @@ onMounted(() => {
         </VCard>
       </VCol>
     </VRow>
-    <VRow>
+    <VRow dense >
       <VCol cols="12">
         <VCard elevation="2" class="pa-4">
           <VCardTitle class="text-h6 mb-3">
@@ -328,7 +328,7 @@ onMounted(() => {
         </VCard>
       </VCol>
     </VRow>
-    <VRow>
+    <VRow dense>
       <VCol cols="12">
         <VCard elevation="2">
           <VCardTitle class="text-h5 pa-6 pb-2">
