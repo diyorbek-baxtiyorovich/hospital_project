@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { Bar } from 'vue-chartjs'
+import { Bar, Line } from 'vue-chartjs'
 import { useRouter } from 'vue-router'
 import { getStatistic } from "@/service/statistics.servise.js"
 import {
@@ -11,6 +11,8 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
+  LineElement,
+  PointElement,
 } from 'chart.js'
 
 
@@ -18,7 +20,7 @@ const props = defineProps({
   filters: Object,
 })
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, BarElement, LineElement, PointElement, CategoryScale, LinearScale)
 
 const router = useRouter()
 const statsData = ref(null)
@@ -30,7 +32,7 @@ const pagination = reactive({
   itemsPerPage: 50,
 })
 
-
+const agents = ref([])
 
 const headers = [
   { title: 'ID', key: 'index', sortable: true },
@@ -78,6 +80,7 @@ async function loadData() {
     const res = await getStatistic(props.filters)
 
     statsData.value = res
+    agents.value = res.agents || []
     totalItems.value = res.clients.total
 
     await new Promise(resolve => setTimeout(resolve, 500))
@@ -88,6 +91,66 @@ async function loadData() {
     loading.value = false
   }
 }
+
+
+const chartDataLine = computed(() => ({
+  labels: agents.value.map(a => a.day),
+  datasets: [
+    {
+      label: 'Qo‘ng‘iroqlar soni',
+      data: agents.value.map(a => a.call_logs_count),
+      borderColor: '#1976D2',
+      backgroundColor: 'rgba(25, 118, 210, 0.2)',
+      tension: 0.3,
+      fill: true,
+    },
+    {
+      label: 'Tashriflar soni',
+      data: agents.value.map(a => a.visitation_logs_count),
+      borderColor: '#43A047',
+      backgroundColor: 'rgba(67, 160, 71, 0.2)',
+      tension: 0.3,
+      fill: true,
+    },
+  ],
+}))
+
+const chartOptionsLine = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    tooltip: {
+      mode: 'index',
+      intersect: false,
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        callback: function (value) {
+          if (Number.isInteger(value)) {
+            return value
+          }
+          return null
+        },
+        stepSize: 1,
+      },
+    },
+    x: {
+      ticks: {
+        autoSkip: true,
+        maxTicksLimit: 10,
+      },
+    },
+  },
+}
+
+
+
 
 const chartData = computed(() => {
   if (!statsData.value?.overall) return null
@@ -112,6 +175,26 @@ const chartOptions = {
   plugins: {
     legend: { position: 'bottom' },
     title: { display: true, text: 'Kechikish davrlari bo‘yicha mijozlar' },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        callback: function (value) {
+          if (Number.isInteger(value)) {
+            return value
+          }
+          return null
+        },
+        stepSize: 1,
+      },
+    },
+    x: {
+      ticks: {
+        autoSkip: true,
+        maxTicksLimit: 10,
+      },
+    },
   },
 }
 
@@ -229,7 +312,22 @@ onMounted(() => {
         </VCard>
       </VCol>
     </VRow>
+    <VRow>
+      <VCol cols="12">
+        <VCard elevation="2" class="pa-4">
+          <VCardTitle class="text-h6 mb-3">
+            Agentlarning kunlik faoliyati
+          </VCardTitle>
 
+          <VCardText>
+            <Line
+              :data="chartDataLine"
+              :options="chartOptionsLine"
+            />
+          </VCardText>
+        </VCard>
+      </VCol>
+    </VRow>
     <VRow>
       <VCol cols="12">
         <VCard elevation="2">
@@ -319,6 +417,7 @@ onMounted(() => {
         </VCard>
       </VCol>
     </VRow>
+
   </div>
 </template>
 

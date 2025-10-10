@@ -83,7 +83,6 @@ async function onUpdate() {
         <VAutocomplete
           v-model="props.updatingItem.loan_agent_id"
           :items="loanPortfolioStore.agentsList"
-          :rules="[v => !!v || 'to\'ldirish majburiy!']"
           class="mt-4"
           item-title="full_name"
           item-value="loan_agent_id"
