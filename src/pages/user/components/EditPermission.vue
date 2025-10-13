@@ -1,8 +1,7 @@
 <script setup>
-import {onMounted, ref} from 'vue'
-
-import {useToast} from 'vue-toastification'
-import {appendRole, getAllUserRoles, getUserRole, updateUser} from "@/service/userService.js"
+import { onMounted, ref, watch } from 'vue'
+import { useToast } from 'vue-toastification'
+import { appendRole, getAllUserRoles, getUserRole } from "@/service/userService.js"
 
 const props = defineProps({
   updatingItem: Object,
@@ -13,44 +12,58 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['updated', 'update:updateDialog'])
-
-function closeDialog() {
-  emit('update:updateDialog', false) // Notify parent to close dialog
-}
-
 const toast = useToast()
 
-const submitCredentials = ref()
 const form = ref(null)
-
-const allUserRoles = ref(null)
-
-async function getAllRoles() {
-  allUserRoles.value = await getAllUserRoles()
-}
-
+const allUserRoles = ref([])
 const userRoles = ref([])
 
+function closeDialog() {
+  emit('update:updateDialog', false)
+}
+
+async function getAllRoles() {
+  try {
+    const res = await getAllUserRoles()
+    allUserRoles.value = res || []
+  } catch (e) {
+    console.error(e)
+    toast.error("Rollarni olishda xatolik yuz berdi")
+  }
+}
+
 async function getUserRoles() {
-  userRoles.value = await getUserRole(props?.updatingItem?.id)
+  try {
+    const res = await getUserRole(props?.updatingItem?.id)
+    userRoles.value = res || []
+  } catch (e) {
+    console.error(e)
+    toast.error("Foydalanuvchi rollarini olishda xatolik")
+  }
 }
 
 async function onUpdate() {
-
-  const {valid} = await form.value.validate()
-
-
+  const { valid } = await form.value.validate()
   if (!valid) return
 
-  const role = userRoles.value.map(role => role.id)
-  const {result} = await appendRole(role, props?.updatingItem?.id)
+  const roleIds = userRoles.value.map(role => role.id)
 
-  if (result === 'OK') {
-    toast.success('Muvofaqqiyatli yangilandi.')
-    emit('update:updateDialog', false)
-  } else
-    toast.error('Xatolik yuz berdi')
+  const userId = props?.updatingItem?.id
+
+  try {
+    const { result } = await appendRole(roleIds, userId)
+
+    if (result === 'Ok') {
+      toast.success('Muvofaqqiyatli yangilandi.')
+      emit('update:updateDialog', false)
+    } else {
+      toast.error('Xatolik yuz berdi')
+    }
+  } catch (error) {
+    toast.error('Server xatosi: ' + error.message)
+  }
 }
+
 
 onMounted(() => {
   getAllRoles()
@@ -59,68 +72,46 @@ onMounted(() => {
 watch(
   () => props.permissionDialog,
   newValue => {
-    if (newValue === true) {
-      getUserRoles();
-    }
+    if (newValue) getUserRoles()
   }
-);
+)
 </script>
 
 <template>
   <div class="text-center">
-    <VDialog
-      v-model="props.permissionDialog"
-      max-width="900"
-    >
+    <VDialog v-model="props.permissionDialog" max-width="800">
       <VCard class="pa-4">
         <VCardTitle>
           Xodim rollarini o'zgartirish
         </VCardTitle>
-        <VDivider class="mb-4"/>
-        <VForm
-          ref="form"
-          @submit.prevent="onUpdate"
-        >
+
+        <VDivider class="mb-4" />
+
+        <VForm ref="form" @submit.prevent="onUpdate">
           <VRow>
-            <VCol
-              cols="12"
-              md="12"
-            >
+            <VCol cols="12">
               <VAutocomplete
                 v-model="userRoles"
                 :items="allUserRoles"
-                :rules="[
-                  v => (Array.isArray(v) && v.length > 0) || 'To\'ldirish majburiy!',
-                ]"
                 item-title="name"
+                item-value="id"
                 label="Xodim rollari"
                 multiple
                 return-object
+                chips
+                clearable
+                :rules="[v => Array.isArray(v) && v.length > 0 || 'Kamida bitta rol tanlang!']"
+                required
               />
             </VCol>
           </VRow>
 
-          <VCardActions class="d-flex w-full justify-end mt-4">
-            <VBtn
-              color="error"
-              variant="elevated"
-              @click="closeDialog"
-            >
-              bekor qilish
-            </VBtn>
-            <VBtn
-              color="success"
-              type="submit"
-              variant="elevated"
-            >
-              saqlash
-            </VBtn>
+          <VCardActions class="d-flex justify-end mt-4">
+            <VBtn color="error" variant="elevated" @click="closeDialog">Bekor qilish</VBtn>
+            <VBtn color="success" type="submit" variant="elevated">Saqlash</VBtn>
           </VCardActions>
         </VForm>
       </VCard>
     </VDialog>
   </div>
 </template>
-
-
-

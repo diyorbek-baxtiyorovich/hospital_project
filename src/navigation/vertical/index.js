@@ -26,27 +26,27 @@ export const navItems = [
     to: { name: 'region' },
     icon: { icon: 'mdi-cog' },
     children: [
-      {
-        title: 'Viloyat',
-        to: { name: 'region' },
-        icon: { icon: 'mdi-folder-wrench-outline' },
-      },
-
       // {
-      //   title: 'Tuman',
-      //   to: {name: 'district'},
-      //   icon: {icon: 'mdi-map'},
+      //   title: 'Viloyat',
+      //   to: { name: 'region' },
+      //   icon: { icon: 'mdi-folder-wrench-outline' },
       // },
-      {
-        title: 'Lokal kod',
-        to: { name: 'local-code' },
-        icon: { icon: 'mdi-map' },
-      },
-      {
-        title: 'Departament',
-        to: { name: 'department' },
-        icon: { icon: 'mdi-map' },
-      },
+
+      // // {
+      // //   title: 'Tuman',
+      // //   to: {name: 'district'},
+      // //   icon: {icon: 'mdi-map'},
+      // // },
+      // {
+      //   title: 'Lokal kod',
+      //   to: { name: 'local-code' },
+      //   icon: { icon: 'mdi-map' },
+      // },
+      // {
+      //   title: 'Departament',
+      //   to: { name: 'department' },
+      //   icon: { icon: 'mdi-map' },
+      // },
       {
         title: 'Xodimla ro\'yxati',
         to: { name: 'user' },

@@ -1,9 +1,9 @@
+import { router } from "@/plugins/1.router/index.js"
 import axios from 'axios'
-import {router} from "@/plugins/1.router/index.js"
 
 
-// axios.defaults.baseURL = 'http://172.29.64.76:8586'
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
+axios.defaults.baseURL = 'http://45.89.125.199:8999'
+// axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
 // axios.defaults.baseURL = '/app'
 
 

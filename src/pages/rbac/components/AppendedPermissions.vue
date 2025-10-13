@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import {useToast} from 'vue-toastification'
-import {useRbacRoleStore} from '@/stores/rbac'
-import {onMounted, ref} from 'vue'
+import { useRbacRoleStore } from '@/stores/rbac'
+import { onMounted, ref } from 'vue'
+import { useToast } from 'vue-toastification'
 
 const rbacRulesStore = useRbacRoleStore()
 
-const {permissions, permissionsById} = storeToRefs(rbacRulesStore)
+const { permissions, permissionsById } = storeToRefs(rbacRulesStore)
 
 const toast = useToast()
 
@@ -27,7 +27,7 @@ async function changePermissions() {
   permissions.value.forEach(permission => {
     if (permission.isPermitted) {
       append.push(
-        permission.id
+        permission.id,
       )
     }
   })
@@ -78,7 +78,7 @@ onMounted(() => {
     <div
       v-for="(allPermissions, index) in permissions"
       :key="allPermissions.id"
-      class=" gap-3 align-center ml-5 my-1 d-flex"
+      class="gap-3 align-center ml-5 my-1 d-flex"
     >
       <span class="font-weight-bold">{{ index + 1 }}) </span>
       <VCheckbox
@@ -90,7 +90,7 @@ onMounted(() => {
     </div>
 
     <VCardActions>
-      <VSpacer/>
+      <VSpacer />
       <VBtn
         color="primary"
         @click="changePermissions"

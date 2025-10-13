@@ -1,7 +1,7 @@
 import axios from '@/lib/axios'
 
 export async function getAllRole() {
-  const {data} = await axios.get('/v1/rbac/get-all-roles')
+  const { data } = await axios.get('/rbac/get-roles')
   if (!data)
     return
 
@@ -9,7 +9,7 @@ export async function getAllRole() {
 }
 
 export async function getAllPermissions() {
-  const {data} = await axios.get('/v1/rbac/get-all-routes')
+  const { data } = await axios.get('/rbac/get-permissions')
   if (!data)
     return
 
@@ -17,15 +17,17 @@ export async function getAllPermissions() {
 }
 
 export async function getPermissionsById(id) {
-  const {data} = await axios.get(`/v1/rbac/get-role-permissions/${id}`)
-  if (!data)
-    return
+  const { data } = await axios.get('/rbac/get-permissions', {
+    params: { permission_id: id },
+  })
 
+  
   return data
 }
 
+
 export async function postRole(newRole) {
-  const {data} = await axios.post('/v1/rbac/add-role', newRole)
+  const { data } = await axios.post('/rbac/add-role', newRole)
   if (!data)
     return
 
@@ -33,15 +35,21 @@ export async function postRole(newRole) {
 }
 
 export async function updateRole(currentRole) {
-  const {data} = await axios.put(`/v1/rbac/update-role/${currentRole.id}`, currentRole)
-  if (!data)
-    return
+  const { data } = await axios.put('/rbac/update-role', {
+    name: currentRole.name,
+    level: currentRole.level,
+  }, {
+    params: {
+      role_id: currentRole.id, 
+    },
+  })
 
   return data
 }
 
+
 export async function deleteRole(id) {
-  const {data} = await axios.delete(`/v1/rbac/delete-role/${id}`)
+  const { data } = await axios.delete(`/v1/rbac/delete-role/${id}`)
   if (!data)
     return
 
@@ -49,7 +57,7 @@ export async function deleteRole(id) {
 }
 
 export async function getAppendUserRole() {
-  const {data} = await axios.get('/role/v1/append-user-role/users')
+  const { data } = await axios.get('/role/v1/append-user-role/users')
   if (!data)
     return
 
@@ -57,7 +65,7 @@ export async function getAppendUserRole() {
 }
 
 export async function postAppendToUser(userId, appendUser) {
-  const {data} = await axios.post(`/user/v1/create${userId}`, appendUser)
+  const { data } = await axios.post(`/user/v1/create${userId}`, appendUser)
   if (!data)
     return
 
@@ -65,7 +73,7 @@ export async function postAppendToUser(userId, appendUser) {
 }
 
 export async function deleteAppendForUser(userId) {
-  const {data} = await axios.delete(`/role/v1/delete/${userId}`)
+  const { data } = await axios.delete(`/role/v1/delete/${userId}`)
   if (!data)
     return
 

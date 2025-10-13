@@ -4,9 +4,9 @@ import {
   getAllRole,
   getPermissionsById,
   postRole,
-  updateRole
+  updateRole,
 } from '@/service/rbac-role.service'
-import {postPermissionToRoles} from '@/service/rbac.service'
+import { postPermissionToRoles } from '@/service/rbac.service'
 
 export const useRbacRoleStore = defineStore('rbac-role', {
   state: () => ({

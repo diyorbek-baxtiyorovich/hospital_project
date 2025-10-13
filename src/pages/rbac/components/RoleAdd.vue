@@ -1,7 +1,7 @@
 <script setup>
-import {ref, reactive} from "vue"
-import {useToast} from "vue-toastification"
-import {useRbacRoleStore} from "@/stores/rbac"
+import { useRbacRoleStore } from "@/stores/rbac"
+import { reactive, ref } from "vue"
+import { useToast } from "vue-toastification"
 
 const rbacRulesStore = useRbacRoleStore()
 const toast = useToast()
@@ -49,16 +49,14 @@ async function submitUser() {
   }
 
   const result = await rbacRulesStore.createRole(newRole)
-  if (result?.result) {
-    toast.success("Фойдаланувчи мувофаққиятли қўшилди")
-    rbacRulesStore.isCreatingRole = false
-    form.value.reset()
+
+  toast.success("Фойдаланувчи мувофаққиятли қўшилди")
+  rbacRulesStore.isCreatingRole = false
+  form.value.reset()
 
 
-    await rbacRuleStore.fetchRbacRole()
-    await rbacRuleStore.fetchRbacPermissions()
-
-  }
+  await rbacRuleStore.fetchRbacRole()
+  await rbacRuleStore.fetchRbacPermissions()
 }
 </script>
 

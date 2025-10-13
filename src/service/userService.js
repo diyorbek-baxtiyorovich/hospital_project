@@ -3,7 +3,7 @@ import axios from '@/lib/axios.js'
 
 export async function getUsers() {
   try {
-    const {data} = await axios.get('/v1/users/get-all')
+    const { data } = await axios.get('/v1/users/get-all')
 
     return data
   } catch (error) {
@@ -11,20 +11,15 @@ export async function getUsers() {
   }
 }
 
-export async function getUsersMe() {
-    try {
-    const {data} = await axios.get('/v1/app/users/get-me')
-
-        return data
-    } catch (error) {
-        return error
-    }
-}
 
 
 export async function getUserRole(id) {
   try {
-    const {data} = await axios.get(`/role/v1/get-user-roles/${id}`)
+    const { data } = await axios.get(`/v1/rbac/get-roles`, {
+      params: {
+        user_id: id,
+      },
+    })
 
     return data
   } catch (error) {
@@ -34,7 +29,7 @@ export async function getUserRole(id) {
 
 export async function appendRole(role, id) {
   try {
-    const {data} = await axios.post(`/role/v1/user/append-to-user/${id}`, {role})
+    const { data } = await axios.patch(`/v1/rbac/append-role/${id}`,  role )
 
     return data
   } catch (error) {
@@ -42,9 +37,10 @@ export async function appendRole(role, id) {
   }
 }
 
+
 export async function getAllUserRoles() {
   try {
-    const {data} = await axios.get('/v1/rbac/get-all-roles')
+    const { data } = await axios.get('/v1/rbac/get-roles')
 
     return data
   } catch (error) {
@@ -84,7 +80,7 @@ export async function updatePassword(newData) {
         user_id: newData.user_id,
         current_password: newData.current_password,
         new_password: newData.new_password,
-      }
+      },
     })
   } catch (error) {
     return error
@@ -93,10 +89,10 @@ export async function updatePassword(newData) {
 
 export async function getAttachedRegionsByUserId(id) {
   try {
-    const {data} = await axios.get('/attached-regions/v1/get-for-admin', {
+    const { data } = await axios.get('/attached-regions/v1/get-for-admin', {
       params: {
         user_id: id,
-      }
+      },
     })
 
     return data
@@ -107,7 +103,7 @@ export async function getAttachedRegionsByUserId(id) {
 
 export async function getUsersForAttach() {
   try {
-    const {data} = await axios.get('/attached-regions/v1/get-user-for-attach')
+    const { data } = await axios.get('/attached-regions/v1/get-user-for-attach')
 
     return data
   } catch (error) {
@@ -117,7 +113,7 @@ export async function getUsersForAttach() {
 
 export async function attachRegions(attachedRegion) {
   try {
-    const {data} = await axios.post('/attached-regions/v1/attach', attachedRegion)
+    const { data } = await axios.post('/attached-regions/v1/attach', attachedRegion)
 
     return data
   } catch (error) {

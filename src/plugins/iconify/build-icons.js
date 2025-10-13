@@ -68,7 +68,8 @@ const sources = {
           'account-group',
           'chart-bar',
           'check-circle',
-          'calendar'
+          'calendar',
+          'magnify'
       ],
     },
     {
