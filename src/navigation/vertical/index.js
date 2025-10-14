@@ -7,8 +7,8 @@ export const navItems = [
     icon: { icon: 'tabler-smart-home' },
   },
   {
-    title: 'Kredit portfeli',
-    to: { name: 'loan-portfolio' },
+    title: 'Departaments',
+    to: { name: 'host-depart' },
     icon: { icon: 'tabler-building-bank' },
   },
   {
