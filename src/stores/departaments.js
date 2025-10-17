@@ -1,6 +1,4 @@
 import { defineStore } from "pinia";
-import { getDepartments } from "@/service/departement.servise.js";
-
 export const useDepartaments = defineStore("departaments", {
   state: () => ({
     headers: [
@@ -22,7 +20,7 @@ export const useDepartaments = defineStore("departaments", {
       },
       {
         title: "Amallar",
-        align: "start",
+        align: "end",
         key: "actions"
       }
     ],

@@ -60,7 +60,7 @@ async function getLocalCodeList() {
       departamentList.value = [];
     }
   } catch (e) {
-    console.error("Xatolik:", e);
+    console.error("Ошибка:", e);
   } finally {
     loading.value = false;
   }
@@ -113,15 +113,17 @@ onMounted(() => {
   <VCard flat>
     <VRow class="ma-2 align-center">
       <VCol cols="12" md="2">
-        <VCardTitle>Departamentlar</VCardTitle>
+        <VCardTitle>Отделы</VCardTitle>
       </VCol>
+
       <VCol cols="12" md="4">
         <VTextField
           v-model="search"
-          label="Qidirish..."
+          label="Поиск..."
           append-icon="mdi-magnify"
         />
       </VCol>
+
       <VCol cols="12" md="3">
         <VMenu
           v-model="menu"
@@ -133,7 +135,7 @@ onMounted(() => {
           <template #activator="{ props }">
             <VTextField
               v-model="for_date"
-              label="Sana (YYYY-MM-DD)"
+              label="Дата (YYYY-MM-DD)"
               v-bind="props"
               prepend-inner-icon="mdi-calendar"
               placeholder="2025-10-14"
@@ -147,9 +149,10 @@ onMounted(() => {
           />
         </VMenu>
       </VCol>
+
       <VCol cols="12" md="2" class="text-right">
         <VBtn color="primary" @click="openAddDialog">
-          Qo‘shish
+          Добавить
         </VBtn>
       </VCol>
     </VRow>
@@ -161,8 +164,8 @@ onMounted(() => {
       :items="filteredList"
       :loading="loading"
       height="70vh"
-      loading-text="Yuklanmoqda..."
-      no-data-text="Ma’lumot topilmadi"
+      loading-text="Загрузка..."
+      no-data-text="Данные не найдены"
     >
       <template #item.id="{ index }">
         {{ index + 1 }}
@@ -173,8 +176,9 @@ onMounted(() => {
           class="cursor-pointer"
           style="color: #338aff"
           @click="openInfoDialog(item)"
-          >{{ item.name }}</span
         >
+          {{ item.name }}
+        </span>
       </template>
 
       <template #item.actions="{ item }">

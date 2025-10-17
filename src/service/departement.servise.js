@@ -11,6 +11,17 @@ export async function getDepartments(params = {}) {
   }
 }
 
+export async function getDepartmentsAll() {
+  try {
+    const { data } = await axios.get("/v1/departments/get-all");
+
+    return data;
+  } catch (error) {
+    console.error("API error:", error);
+    throw error;
+  }
+}
+
 export async function getDepartmentId(id) {
   try {
     const { data } = await axios.get(`/v1/departments/get/${id}`);
@@ -44,5 +55,17 @@ export async function updateDepartment(id, newData) {
     return await axios.put(`/v1/departments/update/${id}`, newData);
   } catch (error) {
     return error;
+  }
+}
+
+export async function updateInfo(params) {
+  try {
+    const { data } = await axios.put("/v1/day-quota/add-extra-quota", null, {
+      params
+    });
+    return data;
+  } catch (error) {
+    console.error("API error:", error);
+    throw error;
   }
 }

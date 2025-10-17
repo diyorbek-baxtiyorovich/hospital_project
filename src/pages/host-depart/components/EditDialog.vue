@@ -45,20 +45,21 @@ async function saveChanges() {
     const payload = {
       name: formData.value.name,
       default_quota: Number(formData.value.default_quota),
-      is_active: formData.value.is_active
+      // is_active: formData.value.is_active
+      is_active: true
     };
 
-    const res = await updateDepartment(props.item.id, payload);
+    const res = await updateDepartment(props.item.department_id, payload);
 
     if (res?.status === 200 || res?.status === 201) {
-      toast.success("Departament muvaffaqiyatli yangilandi!");
+      toast.success("Департамент успешно обновлён!");
       emit("refresh");
       emit("update:modelValue", false);
     } else {
-      toast.error("Yangilashda xatolik yuz berdi!");
+      toast.error("Произошла ошибка при обновлении!");
     }
   } catch (err) {
-    toast.error("Server bilan bog‘lanishda xatolik!");
+    toast.error("Ошибка соединения с сервером!");
     console.error(err);
   } finally {
     loading.value = false;
@@ -69,30 +70,34 @@ async function saveChanges() {
 <template>
   <VDialog v-model="props.modelValue" max-width="600" persistent>
     <VCard class="pa-4">
-      <VCardTitle class="text-h6 mb-4">Default kvotani tahrirlash</VCardTitle>
+      <VCardTitle class="text-h6 mb-4">
+        Редактирование стандартной квоты
+      </VCardTitle>
 
       <VForm ref="form">
         <VTextField
           v-model="formData.name"
-          label="Departament nomi"
+          label="Название департамента"
           variant="outlined"
           class="mb-5"
+          :rules="[v => !!v || 'Обязательное поле']"
         />
 
         <VTextField
           v-model.number="formData.default_quota"
-          label="Default kvota"
+          label="Стандартная квота"
           type="number"
-          :rules="[v => v >= 0 || '0 dan kichik bo‘lmasin']"
           variant="outlined"
+          :rules="[v => v >= 0 || 'Не может быть меньше 0']"
+          class="mb-5"
         />
       </VForm>
 
       <VCardActions>
         <VSpacer />
-        <VBtn text @click="emit('update:modelValue', false)">Bekor</VBtn>
+        <VBtn text @click="emit('update:modelValue', false)">Отмена</VBtn>
         <VBtn color="primary" :loading="loading" @click="saveChanges">
-          Saqlash
+          Сохранить
         </VBtn>
       </VCardActions>
     </VCard>

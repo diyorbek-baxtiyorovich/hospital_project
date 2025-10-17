@@ -1,21 +1,27 @@
 <script setup>
 import { ref } from "vue";
 import { deleteDepartment } from "@/service/departement.servise.js";
+import { useToast } from "vue-toastification";
 
 const props = defineProps({
   modelValue: Boolean,
   item: Object
 });
+
 const emit = defineEmits(["update:modelValue", "refresh"]);
 
 const loading = ref(false);
+const toast = useToast();
 
 async function confirmDelete() {
   loading.value = true;
   try {
     await deleteDepartment(props.item.department_id);
+    toast.success("Отдел успешно удалён!");
     emit("refresh");
     emit("update:modelValue", false);
+  } catch (error) {
+    toast.error("Произошла ошибка при удалении отдела!");
   } finally {
     loading.value = false;
   }
@@ -26,19 +32,19 @@ async function confirmDelete() {
   <VDialog v-model="props.modelValue" max-width="500" persistent>
     <VCard class="pa-4">
       <VCardTitle class="text-center">
-        Ushbu ma'lumotni o‘chirishni tasdiqlaysizmi?
+        Вы уверены, что хотите удалить эту запись?
       </VCardTitle>
 
       <VCardText>
-        <div><b>Nom:</b> {{ props.item?.name }}</div>
-        <div><b>Kvota:</b> {{ props.item?.default_quota }}</div>
+        <div><b>Название:</b> {{ props.item?.name }}</div>
+        <div><b>Квота:</b> {{ props.item?.default_quota }}</div>
       </VCardText>
 
       <VCardActions>
         <VSpacer />
-        <VBtn text @click="emit('update:modelValue', false)">Bekor</VBtn>
+        <VBtn text @click="emit('update:modelValue', false)">Отмена</VBtn>
         <VBtn color="error" :loading="loading" @click="confirmDelete">
-          Tasdiqlash
+          Удалить
         </VBtn>
       </VCardActions>
     </VCard>

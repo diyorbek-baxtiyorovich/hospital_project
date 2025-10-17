@@ -10,11 +10,17 @@
  * This example uses Iconify Tools to import and clean up icons.
  * For Iconify Tools documentation visit https://docs.iconify.design/tools/tools2/
  */
-import {promises as fs} from 'node:fs';
-import {dirname, join} from 'node:path';
+import { promises as fs } from "node:fs";
+import { dirname, join } from "node:path";
 // Installation: npm install --save-dev @iconify/tools @iconify/utils @iconify/json @iconify/iconify
-import {cleanupSVG, importDirectory, isEmptyColor, parseColors, runSVGO} from '@iconify/tools';
-import {getIcons, getIconsCSS, stringToIcon} from '@iconify/utils';
+import {
+  cleanupSVG,
+  importDirectory,
+  isEmptyColor,
+  parseColors,
+  runSVGO
+} from "@iconify/tools";
+import { getIcons, getIconsCSS, stringToIcon } from "@iconify/utils";
 
 const sources = {
   svg: [
@@ -41,43 +47,61 @@ const sources = {
     // Custom JSON file
     // 'json/gg.json',
     // Iconify JSON file (@iconify/json is a package name, /json/ is directory where files are, then filename)
-    require.resolve('@iconify-json/tabler/icons.json'),
+    require.resolve("@iconify-json/tabler/icons.json"),
     {
-      filename: require.resolve('@iconify-json/mdi/icons.json'),
+      filename: require.resolve("@iconify-json/mdi/icons.json"),
       icons: [
-        'close-circle',
-        'language-javascript',
-        'language-typescript',
-        'cog',
-        'folder-wrench-outline',
-        'pencil-circle-outline',
-        'pencil-circle',
-        'delete',
-        'map',
-        'close',
-        'download',
-        'information',
-        'file-download-outline',
-        'file-excel',
-        'lock-reset',
-        'cash',
-        'nas',
-        'account-multiple',
-        'arrow-left-bottom',
-          'check-bold',
-          'account-group',
-          'chart-bar',
-          'check-circle',
-          'calendar',
-          'magnify'
-      ],
+        "close-circle",
+        "language-javascript",
+        "language-typescript",
+        "cog",
+        "folder-wrench-outline",
+        "pencil-circle-outline",
+        "pencil-circle",
+        "delete",
+        "map",
+        "close",
+        "download",
+        "login",
+        "information",
+        "file-download-outline",
+        "file-excel",
+        "lock-reset",
+        "cash",
+        "nas",
+        "account-multiple",
+        "arrow-left-bottom",
+        "check-bold",
+        "account-group",
+        "chart-bar",
+        "check-circle",
+        "calendar",
+        "magnify",
+        "alert-circle-outline",
+        "account",
+        "account-circle-outline",
+        "chart-line",
+        "stethoscope",
+        "lock",
+        "content-save",
+        "doctor",
+        "delete-forever",
+        "trash-can",
+        "shield-check",
+        "account-outline",
+        "eye-off-outline",
+        "eye-outline",
+        "lock-outline",
+        "heart-pulse",
+        "medical-bag",
+        "clipboard-pulse",
+        "clipboard-pulse"
+      ]
     },
     {
-      filename: require.resolve('@iconify-json/fa/icons.json'),
-      icons: [
-        'circle',
-      ],
-    },
+      filename: require.resolve("@iconify-json/fa/icons.json"),
+      icons: ["circle"]
+    }
     // Custom file with only few icons
     // {
     //   filename: require.resolve('@iconify-json/line-md/icons.json'),
@@ -89,16 +113,16 @@ const sources = {
     //     'image-twotone',
     //   ],
     // },
-  ],
+  ]
 };
 // File to save bundle to
-const target = join(__dirname, 'icons.css');
-(async function () {
+const target = join(__dirname, "icons.css");
+(async function() {
   // Create directory for output if missing
   const dir = dirname(target);
   try {
     await fs.mkdir(dir, {
-      recursive: true,
+      recursive: true
     });
   } catch (err) {
     //
@@ -115,7 +139,7 @@ const target = join(__dirname, 'icons.css');
       const filename = require.resolve(`@iconify/json/json/${prefix}.json`);
       sourcesJSON.push({
         filename,
-        icons: organizedList[prefix],
+        icons: organizedList[prefix]
       });
     }
   }
@@ -126,16 +150,19 @@ const target = join(__dirname, 'icons.css');
     for (let i = 0; i < sources.json.length; i++) {
       const item = sources.json[i];
       // Load icon set
-      const filename = typeof item === 'string' ? item : item.filename;
-      const content = JSON.parse(await fs.readFile(filename, 'utf8'));
+      const filename = typeof item === "string" ? item : item.filename;
+      const content = JSON.parse(await fs.readFile(filename, "utf8"));
       for (const key in content) {
-        if (key === 'prefix' && content.prefix === 'tabler') {
+        if (key === "prefix" && content.prefix === "tabler") {
           for (const k in content.icons)
-            content.icons[k].body = content.icons[k].body.replace(/stroke-width="2"/g, 'stroke-width="1.5"');
+            content.icons[k].body = content.icons[k].body.replace(
+              /stroke-width="2"/g,
+              'stroke-width="1.5"'
+            );
         }
       }
       // Filter icons
-      if (typeof item !== 'string' && item.icons?.length) {
+      if (typeof item !== "string" && item.icons?.length) {
         const filteredContent = getIcons(content, item.icons);
         if (!filteredContent)
           throw new Error(`Cannot find required icons in ${filename}`);
@@ -155,12 +182,11 @@ const target = join(__dirname, 'icons.css');
       const source = sources.svg[i];
       // Import icons
       const iconSet = await importDirectory(source.dir, {
-        prefix: source.prefix,
+        prefix: source.prefix
       });
       // Validate, clean up, fix palette, etc.
       await iconSet.forEach(async (name, type) => {
-        if (type !== 'icon')
-          return;
+        if (type !== "icon") return;
         // Get SVG instance for parsing
         const svg = iconSet.toSVG(name);
         if (!svg) {
@@ -176,10 +202,12 @@ const target = join(__dirname, 'icons.css');
             // Replace color with currentColor, add if missing
             // If icon is not monotone, remove this code
             await parseColors(svg, {
-              defaultColor: 'currentColor',
+              defaultColor: "currentColor",
               callback: (attr, colorStr, color) => {
-                return !color || isEmptyColor(color) ? colorStr : 'currentColor';
-              },
+                return !color || isEmptyColor(color)
+                  ? colorStr
+                  : "currentColor";
+              }
             });
           }
           // Optimise
@@ -199,13 +227,15 @@ const target = join(__dirname, 'icons.css');
   }
   // Generate CSS from collected icons
   const cssContent = allIcons
-    .map(iconSet => getIconsCSS(iconSet, Object.keys(iconSet.icons), {
-      iconSelector: '.{prefix}-{name}',
-      mode: 'mask',
-    }))
-    .join('\n');
+    .map(iconSet =>
+      getIconsCSS(iconSet, Object.keys(iconSet.icons), {
+        iconSelector: ".{prefix}-{name}",
+        mode: "mask"
+      })
+    )
+    .join("\n");
   // Save the CSS to a file
-  await fs.writeFile(target, cssContent, 'utf8');
+  await fs.writeFile(target, cssContent, "utf8");
   console.log(`Saved CSS to ${target}!`);
 })().catch(err => {
   console.error(err);
@@ -218,13 +248,11 @@ function organizeIconsList(icons) {
   const sorted = Object.create(null);
   icons.forEach(icon => {
     const item = stringToIcon(icon);
-    if (!item)
-      return;
+    if (!item) return;
     const prefix = item.prefix;
     const prefixList = sorted[prefix] ? sorted[prefix] : (sorted[prefix] = []);
     const name = item.name;
-    if (!prefixList.includes(name))
-      prefixList.push(name);
+    if (!prefixList.includes(name)) prefixList.push(name);
   });
   return sorted;
 }
