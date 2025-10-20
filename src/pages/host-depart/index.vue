@@ -1,47 +1,47 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import { useDepartaments } from "@/stores/departaments.js";
-import { getDepartments } from "@/service/departement.servise.js";
+import { getDepartments } from "@/service/departement.servise.js"
+import { useDepartaments } from "@/stores/departaments.js"
+import { computed, onMounted, ref } from "vue"
 
-import AddDialog from "@/pages/host-depart/components/AddDialog.vue";
-import EditDialog from "@/pages/host-depart/components/EditDialog.vue";
-import DeleteDialog from "@/pages/host-depart/components/DeleteDialog.vue";
-import InfoDialog from "@/pages/host-depart/components/InfoDialog.vue";
+import AddDialog from "@/pages/host-depart/components/AddDialog.vue"
+import DeleteDialog from "@/pages/host-depart/components/DeleteDialog.vue"
+import EditDialog from "@/pages/host-depart/components/EditDialog.vue"
+import InfoDialog from "@/pages/host-depart/components/InfoDialog.vue"
 
-const loading = ref(false);
-const search = ref("");
-const for_date = ref(null);
-const menu = ref(false);
-const dateModel = ref(null);
-const infoDialog = ref(false);
-const selectedItem = ref(null);
-const departamentList = ref([]);
-const departamentsStore = useDepartaments();
+const loading = ref(false)
+const search = ref("")
+const for_date = ref(null)
+const menu = ref(false)
+const dateModel = ref(null)
+const infoDialog = ref(false)
+const selectedItem = ref(null)
+const departamentList = ref([])
+const departamentsStore = useDepartaments()
 
-const addDialog = ref(false);
-const editDialog = ref(false);
-const deleteDialog = ref(false);
+const addDialog = ref(false)
+const editDialog = ref(false)
+const deleteDialog = ref(false)
 
-const availableMonths = ref([]);
+const availableMonths = ref([])
 
 function generateAvailableMonths() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const currentMonth = now.getMonth() + 1;
+  const now = new Date()
+  const year = now.getFullYear()
+  const currentMonth = now.getMonth() + 1
 
   availableMonths.value = Array.from({ length: currentMonth }, (_, i) => {
-    const month = String(i + 1).padStart(2, "0");
+    const month = String(i + 1).padStart(2, "0")
 
-    return `${year}-${month}`;
-  });
+    return `${year}-${month}`
+  })
 }
 
 async function getLocalCodeList() {
-  loading.value = true;
+  loading.value = true
   try {
-    const params = {};
-    if (for_date.value) params.date = for_date.value;
-    const data = await getDepartments(params);
+    const params = {}
+    if (for_date.value) params.date = for_date.value
+    const data = await getDepartments(params)
 
     if (Array.isArray(data)) {
       departamentList.value = data.map(item => ({
@@ -54,69 +54,76 @@ async function getLocalCodeList() {
         base_slots: item.base_slots ?? 0,
         extra_slots: item.extra_slots ?? 0,
         date: item.date || "-",
-        updated_at: item.updated_at || "-"
-      }));
+        updated_at: item.updated_at || "-",
+      }))
     } else {
-      departamentList.value = [];
+      departamentList.value = []
     }
   } catch (e) {
-    console.error("Ошибка:", e);
+    console.error("Ошибка:", e)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
 const filteredList = computed(() => {
-  if (!search.value) return departamentList.value;
+  if (!search.value) return departamentList.value
 
   return departamentList.value.filter(d =>
-    d.name?.toLowerCase().includes(search.value.toLowerCase())
-  );
-});
+    d.name?.toLowerCase().includes(search.value.toLowerCase()),
+  )
+})
 
 function openAddDialog() {
-  addDialog.value = true;
+  addDialog.value = true
 }
 function openInfoDialog(item) {
-  selectedItem.value = item;
-  infoDialog.value = true;
+  selectedItem.value = item
+  infoDialog.value = true
 }
 function openEditDialog(item) {
-  selectedItem.value = item;
-  editDialog.value = true;
+  selectedItem.value = item
+  editDialog.value = true
 }
 
 function openDeleteDialog(item) {
-  selectedItem.value = item;
-  deleteDialog.value = true;
+  selectedItem.value = item
+  deleteDialog.value = true
 }
 
 const updateFormattedDate = async value => {
-  if (!value) return;
-  const d = new Date(value);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  for_date.value = `${year}-${month}-${day}`;
-  menu.value = false;
+  if (!value) return
+  const d = new Date(value)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
 
-  await getLocalCodeList();
-};
+  for_date.value = `${year}-${month}-${day}`
+  menu.value = false
+
+  await getLocalCodeList()
+}
 
 onMounted(() => {
-  getLocalCodeList();
-  generateAvailableMonths();
-});
+  getLocalCodeList()
+  generateAvailableMonths()
+})
 </script>
 
 <template>
   <VCard flat>
     <VRow class="ma-2 align-center">
-      <VCol cols="12" md="2">
+      <VCol
+        cols="12"
+        md="2"
+      >
         <VCardTitle>Отделы</VCardTitle>
       </VCol>
 
-      <VCol cols="12" md="4">
+      <VCol
+        cols="12"
+        md="4"
+      >
         <VTextField
           v-model="search"
           label="Поиск..."
@@ -124,7 +131,10 @@ onMounted(() => {
         />
       </VCol>
 
-      <VCol cols="12" md="3">
+      <VCol
+        cols="12"
+        md="3"
+      >
         <VMenu
           v-model="menu"
           :close-on-content-click="false"
@@ -150,8 +160,15 @@ onMounted(() => {
         </VMenu>
       </VCol>
 
-      <VCol cols="12" md="2" class="text-right">
-        <VBtn color="primary" @click="openAddDialog">
+      <VCol
+        cols="12"
+        md="2"
+        class="text-right"
+      >
+        <VBtn
+          color="primary"
+          @click="openAddDialog"
+        >
           Добавить
         </VBtn>
       </VCol>
@@ -174,7 +191,7 @@ onMounted(() => {
       <template #item.name="{ item }">
         <span
           class="cursor-pointer"
-          style="color: #338aff"
+          style="color: #338aff;"
           @click="openInfoDialog(item)"
         >
           {{ item.name }}
@@ -199,7 +216,10 @@ onMounted(() => {
       </template>
     </VDataTableVirtual>
 
-    <AddDialog v-model="addDialog" @refresh="getLocalCodeList" />
+    <AddDialog
+      v-model="addDialog"
+      @refresh="getLocalCodeList"
+    />
     <EditDialog
       v-model="editDialog"
       :item="selectedItem"
@@ -210,6 +230,9 @@ onMounted(() => {
       :item="selectedItem"
       @refresh="getLocalCodeList"
     />
-    <InfoDialog v-model="infoDialog" :item="selectedItem" />
+    <InfoDialog
+      v-model="infoDialog"
+      :item="selectedItem"
+    />
   </VCard>
 </template>

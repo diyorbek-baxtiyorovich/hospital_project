@@ -95,7 +95,6 @@ const sources = {
         "heart-pulse",
         "medical-bag",
         "clipboard-pulse",
-        "clipboard-pulse"
       ]
     },
     {

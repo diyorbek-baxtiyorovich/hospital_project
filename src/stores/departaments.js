@@ -1,4 +1,5 @@
-import { defineStore } from "pinia";
+import { defineStore } from "pinia"
+
 export const useDepartaments = defineStore("departaments", {
   state: () => ({
     headers: [
@@ -6,34 +7,34 @@ export const useDepartaments = defineStore("departaments", {
         title: "Id",
         align: "start",
         key: "id",
-        sortable: false
+        sortable: false,
       },
       {
         title: "Nomi",
         align: "start",
-        key: "name"
+        key: "name",
       },
       {
         title: "Standart kvota",
         align: "start",
-        key: "default_quota"
+        key: "default_quota",
       },
       {
         title: "Amallar",
         align: "end",
-        key: "actions"
-      }
+        key: "actions",
+      },
     ],
 
     pageParams: {
       page: 1,
       size: 50,
-      for_month: null
+      for_month: null,
     },
     pageLength: 1,
     agentList: [],
-    loading: false
+    loading: false,
   }),
 
-  actions: {}
-});
+  actions: {},
+})

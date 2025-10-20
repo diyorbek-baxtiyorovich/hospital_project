@@ -1,87 +1,94 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import { useDoctorsStore } from "@/stores/doctorsStore.js";
-import { deleteDoctors, getDoctors } from "@/service/doctors.servise.js";
-import { getDepartmentsAll } from "@/service/departement.servise.js";
+import { getDepartmentsAll } from "@/service/departement.servise.js"
+import { deleteDoctors, getDoctors } from "@/service/doctors.servise.js"
+import { useDoctorsStore } from "@/stores/doctorsStore.js"
+import { onMounted, ref } from "vue"
 
-import AddDoctorsInfo from "@/pages/doctors-site/components/AddDoctorsInfo.vue";
-import DoctorEditDialog from "@/pages/doctors-site/components/DoctorEditDialog.vue";
-import DoctorsDelete from "@/pages/doctors-site/components/doctorsDelete.vue";
+import AddDoctorsInfo from "@/pages/doctors-site/components/AddDoctorsInfo.vue"
+import DoctorEditDialog from "@/pages/doctors-site/components/DoctorEditDialog.vue"
+import DoctorsDelete from "@/pages/doctors-site/components/doctorsDelete.vue"
 
-const loading = ref(false);
-const doctorsStore = useDoctorsStore();
-const selectedItem = ref({});
-const doctorsList = ref([]);
-const search = ref("");
+const loading = ref(false)
+const doctorsStore = useDoctorsStore()
+const selectedItem = ref({})
+const doctorsList = ref([])
+const search = ref("")
 
-const addDialog = ref(false);
-const editDialog = ref(false);
-const deleteDialog = ref(false);
-const departamentList = ref([]);
+const addDialog = ref(false)
+const editDialog = ref(false)
+const deleteDialog = ref(false)
+const departamentList = ref([])
 
 async function getDoctorsList() {
-  loading.value = true;
+  loading.value = true
   try {
     const params = {
-      query: search.value || ""
-    };
-    const res = await getDoctors(params);
+      query: search.value || "",
+    }
 
-    doctorsList.value = Array.isArray(res) ? res : res?.data || [];
+    const res = await getDoctors(params)
+
+    doctorsList.value = Array.isArray(res) ? res : res?.data || []
   } catch (e) {
-    console.error("Ошибка:", e);
+    console.error("Ошибка:", e)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
 async function getDepartament() {
   try {
-    const data = await getDepartmentsAll();
+    const data = await getDepartmentsAll()
 
-    departamentList.value = data;
+    departamentList.value = data
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
 }
 
 const deleteData = async () => {
   try {
-    await deleteDoctors(selectedItem.value.id);
-    await getDoctorsList();
+    await deleteDoctors(selectedItem.value.id)
+    await getDoctorsList()
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
-};
+}
 
 function openAddDialog() {
-  addDialog.value = true;
+  addDialog.value = true
 }
 
 function openEditDialog(item) {
-  selectedItem.value = item;
-  editDialog.value = true;
+  selectedItem.value = item
+  editDialog.value = true
 }
 
 function openDeleteDialog(item) {
-  selectedItem.value = item;
-  deleteDialog.value = true;
+  selectedItem.value = item
+  deleteDialog.value = true
 }
 
 onMounted(() => {
-  getDoctorsList();
-  getDepartament();
-});
+  getDoctorsList()
+  getDepartament()
+})
 </script>
 
 <template>
   <VCard flat>
     <VRow class="ma-2 align-center">
-      <VCol cols="12" md="6">
+      <VCol
+        cols="12"
+        md="6"
+      >
         <VCardTitle>Список врачей</VCardTitle>
       </VCol>
 
-      <VCol cols="12" md="4">
+      <VCol
+        cols="12"
+        md="4"
+      >
         <VTextField
           v-model="search"
           label="Поиск..."
@@ -90,8 +97,17 @@ onMounted(() => {
         />
       </VCol>
 
-      <VCol cols="12" md="2" class="text-right">
-        <VBtn color="primary" @click="openAddDialog">Добавить</VBtn>
+      <VCol
+        cols="12"
+        md="2"
+        class="text-right"
+      >
+        <VBtn
+          color="primary"
+          @click="openAddDialog"
+        >
+          Добавить
+        </VBtn>
       </VCol>
     </VRow>
 
@@ -110,7 +126,7 @@ onMounted(() => {
       </template>
 
       <template #item.username="{ item }">
-        <span style="color: #1976d2">{{ item.username }}</span>
+        <span style="color: #1976d2;">{{ item.username }}</span>
       </template>
 
       <template #item.actions="{ item }">
@@ -138,12 +154,15 @@ onMounted(() => {
     />
 
     <DoctorEditDialog
-      v-model:editDialog="editDialog"
+      v-model:edit-dialog="editDialog"
       :department-list="departamentList"
       :editing-item="selectedItem"
       @updated="getDoctorsList"
     />
 
-    <DoctorsDelete v-model="deleteDialog" @confirm="deleteData" />
+    <DoctorsDelete
+      v-model="deleteDialog"
+      @confirm="deleteData"
+    />
   </VCard>
 </template>

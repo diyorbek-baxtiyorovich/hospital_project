@@ -1,0 +1,10 @@
+<template>
+  <VDialog
+    v-model="addDialog"
+    max-width="600"
+  >
+    <div>
+      <h1>here</h1>
+    </div>
+  </VDialog>
+</template>
