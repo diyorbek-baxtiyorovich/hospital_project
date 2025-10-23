@@ -2,17 +2,17 @@ import checkPermission from "@/utils/checkPermission.js";
 
 export const navItems = [
   {
-    title: "Asosiy",
+    title: "Назначения",
     to: { name: "root" },
     icon: { icon: "tabler-smart-home" }
   },
   {
-    title: "Departaments",
+    title: "Департаменты",
     to: { name: "host-depart" },
     icon: { icon: "tabler-building-bank" }
   },
   {
-    title: "Doctors",
+    title: "Врачи",
     to: { name: "doctors-site" },
     icon: { icon: "mdi-folder-wrench-outline" }
   },
