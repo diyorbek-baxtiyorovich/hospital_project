@@ -9,34 +9,34 @@ export const useAppointments = defineStore("appointments", {
         key: "id"
       },
       {
-        title: "Bemor ismi",
+        title: "Имя пациента",
         align: "start",
         key: "patient_fullname"
       },
       {
-        title: "Shifokor",
+        title: "Врач",
         align: "start",
         key: "doctor.full_name"
       },
       {
-        title: "Bo‘lim",
+        title: "Отделение",
         align: "start",
         key: "department.name"
       },
 
       {
-        title: "Sana",
+        title: "Дата",
         align: "start",
         key: "date"
       },
 
       {
-        title: "Holat",
+        title: "Статус",
         align: "start",
         key: "status"
       },
       {
-        title: "Amallar",
+        title: "Действия",
         align: "end",
         key: "actions",
         sortable: false

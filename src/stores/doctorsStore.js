@@ -20,11 +20,6 @@ export const useDoctorsStore = defineStore("doctors", {
         key: "full_name"
       },
       {
-        title: "ID отдела",
-        align: "start",
-        key: "department_id"
-      },
-      {
         title: "Название отдела",
         align: "start",
         key: "department_name"
