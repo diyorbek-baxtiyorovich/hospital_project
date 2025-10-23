@@ -5,21 +5,13 @@
     transition="dialog-bottom-transition"
   >
     <VCard>
-      <!-- Header -->
-      <VToolbar
-        flat
-        color="primary"
-        dark
-      >
+      <VToolbar flat color="primary" dark>
         <VToolbarTitle class="text-h6 font-weight-medium text-white">
-          Qabul tafsilotlari
+          Детали приёма
         </VToolbarTitle>
         <VSpacer />
-        <VBtn
-          variant="text"
-          @click="isOpen = false"
-        >
-          <VIcon>mdi-close</VIcon>
+        <VBtn variant="text" icon @click="isOpen = false">
+          <VIcon color="white">mdi-close</VIcon>
         </VBtn>
       </VToolbar>
 
@@ -28,83 +20,65 @@
           <VRow>
             <VCol cols="12">
               <div class="text-subtitle-1 font-weight-medium mb-2">
-                Bemor ma’lumotlari
+                Информация о пациенте
               </div>
               <VDivider />
             </VCol>
 
-            <VCol
-              cols="12"
-              sm="6"
-            >
+            <VCol cols="12" sm="6">
               <div class="info-label">
-                F.I.SH:
+                Ф.И.О:
               </div>
               <div class="info-value">
                 {{ data.patient_fullname }}
               </div>
             </VCol>
-            <VCol
-              cols="12"
-              sm="6"
-            >
+            <VCol cols="12" sm="6">
               <div class="info-label">
-                Tug‘ilgan sana:
+                Дата рождения:
               </div>
               <div class="info-value">
                 {{ formatDate(data.birth_date) }}
               </div>
             </VCol>
 
-            <VCol
-              cols="12"
-              sm="6"
-            >
+            <VCol cols="12" sm="6">
               <div class="info-label">
-                Telefon:
+                Телефон:
               </div>
               <div class="info-value">
                 {{ data.phone }}
               </div>
             </VCol>
-            <VCol
-              cols="12"
-              sm="6"
-            >
+            <VCol cols="12" sm="6">
               <div class="info-label">
-                Bo‘lim:
+                Отделение:
               </div>
               <div class="info-value">
                 {{ data.department?.name }}
               </div>
             </VCol>
 
-            <VCol
-              cols="12"
-              sm="6"
-            >
+            <VCol cols="12" sm="6">
               <div class="info-label">
-                Shifokor:
+                Врач:
               </div>
               <div class="info-value">
                 {{ data.doctor_name_text }}
               </div>
             </VCol>
-            <VCol
-              cols="12"
-              sm="6"
-            >
+            <VCol cols="12" sm="6">
               <div class="info-label">
-                Qabul sanasi:
+                Дата приёма:
               </div>
               <div class="info-value">
-                {{ formatDate(data.date) }} (Slot №{{ data.slot_no }})
+                {{ formatDate(data.date) }} (Слот №{{ data.slot_no }})
               </div>
             </VCol>
 
             <VCol cols="12">
               <div class="info-label">
-                Tashxis:
+                Диагноз:
               </div>
               <div class="info-value">
                 {{ data.diagnosis }}
@@ -113,7 +87,7 @@
 
             <VCol cols="12">
               <div class="info-label">
-                Maqsad:
+                Цель визита:
               </div>
               <div class="info-value">
                 {{ data.purpose }}
@@ -126,14 +100,14 @@
           <VRow>
             <VCol cols="12">
               <div class="text-subtitle-1 font-weight-medium mb-2">
-                Izohlar
+                Примечания
               </div>
               <VDivider />
             </VCol>
 
             <VCol cols="12">
               <div class="info-label text-red-darken-2">
-                Bosh shifokor uchun:
+                Для главного врача:
               </div>
               <div class="info-value">
                 {{ data.note_for_head }}
@@ -142,7 +116,7 @@
 
             <VCol cols="12">
               <div class="info-label text-blue-darken-2">
-                Bemor uchun eslatma:
+                Заметка для пациента:
               </div>
               <div class="info-value">
                 {{ data.note_public }}
@@ -155,29 +129,23 @@
           <VRow>
             <VCol cols="12">
               <div class="text-subtitle-1 font-weight-medium mb-2">
-                Tizim ma’lumotlari
+                Системная информация
               </div>
               <VDivider />
             </VCol>
 
-            <VCol
-              cols="12"
-              sm="6"
-            >
+            <VCol cols="12" sm="6">
               <div class="info-label">
-                Yaratilgan:
+                Создано:
               </div>
               <div class="info-value">
                 {{ formatDateTime(data.created_at) }}
               </div>
             </VCol>
 
-            <VCol
-              cols="12"
-              sm="6"
-            >
+            <VCol cols="12" sm="6">
               <div class="info-label">
-                Yangilangan:
+                Обновлено:
               </div>
               <div class="info-value">
                 {{ formatDateTime(data.updated_at) }}
@@ -186,11 +154,11 @@
 
             <VCol cols="12">
               <div class="info-label">
-                Yaratgan foydalanuvchi:
+                Пользователь, создавший запись:
               </div>
               <div class="info-value">
-                {{ data.created_by_user?.full_name }}
-                ({{ data.created_by_user?.user?.username }})
+                {{ data.created_by_user?.full_name || "неизвестно" }}
+                {{ data.created_by_user?.user?.username || "неизвестно" }}
               </div>
             </VCol>
           </VRow>
@@ -198,12 +166,8 @@
       </VCardText>
       <VDivider />
       <VCardActions class="pa-4 justify-end">
-        <VBtn
-          variant="outlined"
-          color="primary"
-          @click="isOpen = false"
-        >
-          Yopish
+        <VBtn variant="outlined" color="primary" @click="isOpen = false">
+          Закрыть
         </VBtn>
       </VCardActions>
     </VCard>
@@ -211,40 +175,43 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
+import { ref, watch } from "vue";
 
 const props = defineProps({
   modelValue: Boolean,
-  data: { type: Object, required: true },
-})
+  data: { type: Object, required: true }
+});
 
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:modelValue"]);
 
-const isOpen = ref(props.modelValue)
+const isOpen = ref(props.modelValue);
 
-watch(() => props.modelValue, v => (isOpen.value = v))
-watch(isOpen, v => emit("update:modelValue", v))
+watch(
+  () => props.modelValue,
+  v => (isOpen.value = v)
+);
+watch(isOpen, v => emit("update:modelValue", v));
 
 function formatDate(date) {
-  if (!date) return "-"
-  
-  return new Date(date).toLocaleDateString("uz-UZ", {
+  if (!date) return "-";
+
+  return new Date(date).toLocaleDateString("ru-RU", {
     year: "numeric",
     month: "long",
-    day: "numeric",
-  })
+    day: "numeric"
+  });
 }
 
 function formatDateTime(datetime) {
-  if (!datetime) return "-"
-  
-  return new Date(datetime).toLocaleString("uz-UZ", {
+  if (!datetime) return "-";
+
+  return new Date(datetime).toLocaleString("ru-RU", {
     year: "numeric",
     month: "long",
     day: "numeric",
     hour: "2-digit",
-    minute: "2-digit",
-  })
+    minute: "2-digit"
+  });
 }
 </script>
 

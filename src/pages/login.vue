@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import AppTextField from "@core/components/app-form-elements/AppTextField.vue";
-
+import logo from "@/assets/images/logos.png";
 definePage({
   meta: {
     layout: "blank",
@@ -103,8 +103,11 @@ const login = async () => {
     >
       <VCard flat class="pa-8 pa-sm-12 auth-card" max-width="500" width="100%">
         <VCardText class="text-center pa-0 mb-8">
-          <div class="mb-6">
-            <VImg :width="280" src="/logo_mkb.svg" class="mx-auto" />
+          <div
+            class="mb-6 d-flex justify-center"
+            style="width: 100%; height: 150px "
+          >
+            <VImg :width="200" :src="logo" />
           </div>
 
           <h3 class="text-h4 font-weight-bold mb-2 text-primary">

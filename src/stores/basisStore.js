@@ -1,4 +1,4 @@
-import { defineStore } from "pinia"
+import { defineStore } from "pinia";
 
 export const useAppointments = defineStore("appointments", {
   state: () => ({
@@ -6,54 +6,43 @@ export const useAppointments = defineStore("appointments", {
       {
         title: "id",
         align: "start",
-        key: "id",
+        key: "id"
       },
       {
         title: "Bemor ismi",
         align: "start",
-        key: "patient_fullname",
-      },
-      
-      {
-        title: "Tashxis",
-        align: "start",
-        key: "diagnosis",
-      },
-      {
-        title: "Maqsad",
-        align: "start",
-        key: "purpose",
+        key: "patient_fullname"
       },
       {
         title: "Shifokor",
         align: "start",
-        key: "doctor.full_name",
+        key: "doctor.full_name"
       },
       {
         title: "Bo‘lim",
         align: "start",
-        key: "department.name",
+        key: "department.name"
       },
-      
+
       {
         title: "Sana",
         align: "start",
-        key: "date",
+        key: "date"
       },
 
-      //   {
-      //     title: "Holat",
-      //     align: "start",
-      //     key: "status",
-      //   },
+      {
+        title: "Holat",
+        align: "start",
+        key: "status"
+      },
       {
         title: "Amallar",
         align: "end",
         key: "actions",
-        sortable: false,
-      },
-    ],
+        sortable: false
+      }
+    ]
   }),
 
-  actions: {},
-})
+  actions: {}
+});
