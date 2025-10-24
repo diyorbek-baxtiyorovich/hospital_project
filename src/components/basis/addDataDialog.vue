@@ -43,69 +43,34 @@
                 variant="outlined"
                 density="comfortable"
                 clearable
+                placeholder="+7 (___) ___-__-__"
+                @input="formatPhone"
               />
             </VCol>
 
             <VCol cols="12" md="6">
-              <VMenu
-                v-model="birthMenu"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template #activator="{ props }">
-                  <div v-bind="props">
-                    <VTextField
-                      :model-value="formatDate(form.birth_date)"
-                      label="🎂 Дата рождения"
-                      variant="outlined"
-                      density="comfortable"
-                      readonly
-                      clearable
-                      prepend-inner-icon="mdi-cake-variant"
-                      @click:clear="form.birth_date = null"
-                    />
-                  </div>
-                </template>
-
-                <VDatePicker
-                  v-model="form.birth_date"
-                  color="primary"
-                  @update:model-value="birthMenu = false"
-                />
-              </VMenu>
+              <VTextField
+                v-model="form.birth_date"
+                label="🎂 Дата рождения"
+                variant="outlined"
+                density="comfortable"
+                clearable
+                type="text"
+                prepend-inner-icon="mdi-cake-variant"
+              />
             </VCol>
 
             <VCol cols="12" md="6">
-              <VMenu
-                v-model="appointmentMenu"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template #activator="{ props }">
-                  <div v-bind="props">
-                    <VTextField
-                      :model-value="formatDate(form.date)"
-                      label="📅 Дата приёма"
-                      variant="outlined"
-                      density="comfortable"
-                      readonly
-                      clearable
-                      prepend-inner-icon="mdi-calendar"
-                      @click:clear="form.date = null"
-                    />
-                  </div>
-                </template>
-
-                <VDatePicker
-                  v-model="form.date"
-                  color="primary"
-                  @update:model-value="appointmentMenu = false"
-                />
-              </VMenu>
+              <VTextField
+                v-model="form.date"
+                label="📅 Дата приёма"
+                variant="outlined"
+                density="comfortable"
+                clearable
+                type="text"
+                placeholder="YYYY-MM-DD"
+                prepend-inner-icon="mdi-calendar"
+              />
             </VCol>
 
             <VCol cols="12" md="6">
@@ -222,6 +187,7 @@ const props = defineProps({ modelValue: Boolean });
 const emit = defineEmits(["update:modelValue", "submit"]);
 
 const model = ref(props.modelValue);
+
 watch(
   () => props.modelValue,
   val => (model.value = val)
@@ -236,7 +202,7 @@ const agentList = ref([]);
 
 const form = reactive({
   department_id: null,
-  date: new Date(),
+  date: getTodayDate(),
   slot_no: null,
   doctor_id: null,
   patient_fullname: "",
@@ -248,6 +214,36 @@ const form = reactive({
   note_for_head: "",
   note_public: ""
 });
+
+function getTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function formatPhone() {
+  let value = form.phone.replace(/\D/g, "");
+  if (!value.startsWith("7")) {
+    value = "7" + value;
+  }
+  if (value.length > 11) {
+    value = value.slice(0, 11);
+  }
+
+  const parts = [
+    value.slice(1, 4),
+    value.slice(4, 7),
+    value.slice(7, 9),
+    value.slice(9, 11)
+  ];
+
+  form.phone = `+7 (${parts[0] || ""}) ${parts[1] || ""}${
+    parts[2] ? "-" + parts[2] : ""
+  }${parts[3] ? "-" + parts[3] : ""}`;
+}
 
 async function doctorsData() {
   try {
@@ -270,6 +266,7 @@ function formatDate(date) {
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
+
   return `${year}-${month}-${day}`;
 }
 
@@ -279,9 +276,7 @@ function closeDialog() {
 
 function submitForm() {
   const payload = {
-    ...form,
-    date: formatDate(form.date),
-    birth_date: formatDate(form.birth_date)
+    ...form
   };
 
   emit("submit", payload);
